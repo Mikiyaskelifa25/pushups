@@ -33,13 +33,13 @@ export default function Home() {
   useEffect(() => {
     try {
       // Load push-up data
-      const savedData = localStorage.getItem("pushupData");
+      const savedData = window.localStorage.getItem("pushupData");
       if (savedData) {
         setPushups(JSON.parse(savedData));
       }
       
       // Load user level
-      const savedLevel = localStorage.getItem("userLevel");
+      const savedLevel = window.localStorage.getItem("userLevel");
       if (savedLevel) {
         setUserLevel(parseInt(savedLevel) || 1);
       }
@@ -65,7 +65,7 @@ export default function Home() {
     const today = new Date();
     today.setHours(0, 0, 0, 0); // Normalize to start of day
     
-    const storedStartDate = localStorage.getItem("challengeStartDate");
+    const storedStartDate = window.localStorage.getItem("challengeStartDate");
     
     if (storedStartDate) {
       const startDate = new Date(storedStartDate);
@@ -106,7 +106,7 @@ export default function Home() {
       }
     } else {
       // First time using app - set today as the start date
-      localStorage.setItem("challengeStartDate", today.toISOString());
+      window.localStorage.setItem("challengeStartDate", today.toISOString());
       setCurrentDay(1);
     }
   };
@@ -124,7 +124,7 @@ export default function Home() {
     const newLevel = determineUserLevel(totalPushups);
     if (newLevel !== userLevel) {
       setUserLevel(newLevel);
-      localStorage.setItem("userLevel", newLevel.toString());
+      window.localStorage.setItem("userLevel", newLevel.toString());
       
       // Show confetti for level up
       if (newLevel > userLevel) {
@@ -134,7 +134,7 @@ export default function Home() {
     }
     
     // Save push-up data
-    localStorage.setItem("pushupData", JSON.stringify(pushups));
+   window.localStorage.setItem("pushupData", JSON.stringify(pushups));
     
     // Check if challenge is completed
     checkChallengeCompletion();
@@ -279,7 +279,7 @@ export default function Home() {
       
       // Record update time without restricting updates
       const now = new Date().getTime();
-      localStorage.setItem("lastUpdateTime", now.toString());
+      window.localStorage.setItem("lastUpdateTime", now.toString());
       setLastUpdate(now.toString());
       setCanUpdate(true); // Always allow updates
       
@@ -300,14 +300,14 @@ export default function Home() {
   // Reset challenge
   const resetChallenge = () => {
     if (confirm("Are you sure you want to reset your 30-day challenge? All progress will be lost.")) {
-      localStorage.setItem("challengeStartDate", new Date().toISOString());
-      localStorage.removeItem("lastUpdateTime");
+      window.localStorage.setItem("challengeStartDate", new Date().toISOString());
+      window.localStorage.removeItem("lastUpdateTime");
       setPushups(Array(30).fill(0));
       setCurrentDay(1);
       setLastUpdate(null);
       setInputValue('');
       setUserLevel(1);
-      localStorage.setItem("userLevel", "1");
+      window.localStorage.setItem("userLevel", "1");
     }
   };
 
@@ -340,7 +340,7 @@ export default function Home() {
     
     // Record update time
     const now = new Date().getTime();
-    localStorage.setItem("lastUpdateTime", now.toString());
+    window.localStorage.setItem("lastUpdateTime", now.toString());
     setLastUpdate(now.toString());
     
     // Close modal and reset
@@ -561,7 +561,7 @@ export default function Home() {
     const percentage = Math.min(Math.round((todaysCount / currentLevelData.daily) * 100), 100);
     
     // Calculate challenge dates for display
-    const startDateStr = localStorage.getItem("challengeStartDate");
+    const startDateStr = window.localStorage.getItem("challengeStartDate");
     const startDate = startDateStr ? new Date(startDateStr) : new Date();
     const endDate = new Date(startDate);
     endDate.setDate(endDate.getDate() + 29); // 30 days total (0-29)
